@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Tracking App</title>
+    <link rel="stylesheet" href="{% static 'pizzatracker/css/output.css' %}">
+    <style>
+
+        .progress-bar-striped {
+
+            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+
+            background-size: 1rem 1rem; /* Adjust the size of the stripes */
+
+            animation: progress-bar-stripes 1s linear infinite;
+
+        }
+
+
+        @keyframes progress-bar-stripes {
+
+            from {
+
+                background-position: 1rem 0;
+
+            }
+
+            to {
+
+                background-position: 0 0;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+<body>
+    {% block content %}
+    {% endblock content %}
+</body>
+</html>

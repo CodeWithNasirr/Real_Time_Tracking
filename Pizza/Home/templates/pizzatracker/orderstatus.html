@@ -1,0 +1,61 @@
+{% extends "pizzatracker/base.html" %}
+{% block content %}
+<div class="h-screen w-full flex flex-col p-20 justify-center items-center bg-gray-100 ">
+    <!-- Order Tracking Header -->
+    <div class="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md overflow-hidden">
+        <h1 class="text-3xl font-bold text-gray-900 mb-6">Order Tracking</h1>
+        <p>{{order.pizza}}</p>
+        <p>Id: {{order.order_id}}</p>
+        <p class="status">Status: {{order.status}}</p>
+        <p class="text-sm text-gray-600 mb-4">Your order is on its way!</p>
+    </div>
+    <!-- Order Tracking Progress Bar -->
+   
+    <!-- Order Tracking Progress Bar -->
+    <div class="w-full p-6 bg-white mt-5 rounded-xl shadow-md overflow-hidden">
+        <div class="flex flex-col">
+            <div class="relative w-full h-4 bg-gray-300 rounded-full mb-5">
+                <div class="bar progress-bar-striped progress-bar-animated h-full bg-green-500 rounded-full text-white" style="width: 20%;" >{{order.status}}</div>
+            </div>
+            <div class="flex justify-between items-center">
+                <p class="text-sm text-gray-600">Order Received <br/> {{order.created_time}}</p>
+                <p class="text-sm text-gray-600">Baking <br/>(10:15 AM)</p>
+                <p class="text-sm text-gray-600">Baked <br/>(10:30 AM)</p>
+                <p class="text-sm text-gray-600">Out for Delivery <br/> (10:45 AM)</p>
+                <p class="text-sm text-gray-600">Order Delivered <br/>(11:00 AM)</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let order_id = '{{order.order_id}}';
+    let socket = new WebSocket(`ws://localhost:8000/ws/main/${order_id}`);
+
+    socket.onopen = function(e) {
+        console.log("Connection Established");
+    }
+
+    socket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        console.log(data);
+
+        // Access order_progress and status from data
+        let order_progress = data.order.progress_percentage;
+        let status = data.order.status;
+        console.log(order_progress, status);
+
+        // Call the ui function to update the UI
+        ui(order_progress, status);
+    }
+
+    function ui(order_progress, status) {
+        let progress_bar = document.querySelector('.bar');
+        progress_bar.style.width = order_progress + '%'; 
+        // console.log("Updated Progress:", order_progress + "%");
+        document.querySelector('.status').textContent = 'Status: ' + status;
+
+    }
+</script>
+
+
+{% endblock content %}

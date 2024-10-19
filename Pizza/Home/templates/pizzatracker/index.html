@@ -1,0 +1,48 @@
+{% extends "pizzatracker/base.html" %}
+
+{% block content %}
+  <!-- Container -->
+  <div class=" flex flex-col justify-center items-center bg-gray-100 py-20 md:flex-row lg:flex-row xl:flex-row">
+    <!-- Pizza List -->
+    <div class="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md overflow-y-scroll md:max-w-2xl lg:max-w-xl xl:max-w-2xl">
+      {% if messages %}
+        <ul class="list-none mb-0">
+          {% for message in messages %}
+            <li class="py-2 px-4 {% if message.tags %} {{ message.tags }} {% endif %} ">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <h1 class="text-4xl font-bold text-gray-900 mb-6">Pizza Menu</h1>
+
+      {% for pizza in pizzas %}
+        <div class="flex mb-6 md:flex-row lg:flex-row xl:flex-row">
+          <img src="{{ pizza.image }}" alt="Radon Pizza Image 1" class="w-48 h-48 object-cover rounded-lg mr-4">
+          <div class="p-4">
+            <h2 class="text-lg font-bold text-gray-900">{{pizza.name}}</h2>
+            <p class="text-sm text-gray-600 py-2">{{pizza.desc}}</p>
+            <p class="text-sm text-gray-600 font-bold mb-2">Price: ₹{{pizza.price}}</p>
+            <div class="flex justify-between">
+              <a href="{% url 'order' pizza.id  %}" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
+                Order Now
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Orders</h2>
+        <ul class="border border-red-500 rounded-lg">
+          {% for order in orders %}
+            <li class="p-5 bg-white border-1 shadow-md text-gray-900 mb-4 flex justify-between">
+              <span>{{ order.pizza }} (₹{{ order.amount }})   {{order.created_at}}</span>
+              <a href="{% url 'status' order.pk %}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Tracking Now
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+    </div>
+
+  </div>
+{% endblock content %}
